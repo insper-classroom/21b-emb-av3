@@ -4,13 +4,11 @@ A avaliacão será off-line! Pedimos que não compartilhem e não olhem códigos
 
 O código exemplo deste repositório já possui:
     - LCD
-    -
+    - LVGL j
     - TC/ RTT/ RTC/ AFEC já adicionados no ASF Wizard
     - Deve utilizar o RTOS e suas funcionalidades.
 
-:triangular_flag_on_post: **Ao finalizar a entrega preencher o formulário (uma única vez!):**
-
-Acessar a avaliacao pelo link:
+**ENTREGA: SEXTA 00H00**.
 
 ## Descrição
 
