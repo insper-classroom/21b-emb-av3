@@ -1,16 +1,12 @@
 # 21b - Avaliação Prática 3
 
-Leia atentamente as informações a seguir:
+A avaliacão será off-line! Pedimos que não compartilhem e não olhem códigos deus seus colegas. Leia toda a descricão da prova antes de "sair fazendo".
 
-1. **Faça o seu trabalho de maneira ética!**
-1. **A cada 30 minutos você deverá fazer um commit no seu código!**
-    - Códigos que não tiverem commit a cada 30min ou que mudarem drasticamente entre os commits serão descartados (conceito I) !!
-    - Você deve inserir mensagens condizentes nos commits!
-1. Duração: 3h
-1. Usar o código exemplo deste repositório, ele já possui:
-    - Diplay do módulo OLED1
+O código exemplo deste repositório já possui:
+    - LCD
+    -
     - TC/ RTT/ RTC/ AFEC já adicionados no ASF Wizard
-    - Deve utilizar o rtos e suas funcionalidades.
+    - Deve utilizar o RTOS e suas funcionalidades.
 
 :triangular_flag_on_post: **Ao finalizar a entrega preencher o formulário (uma única vez!):**
 
@@ -66,6 +62,8 @@ O enconder é um dispositivo eletromecânico que converte rotação mecânica em
 
 O enconder que iremos utilizar possui duas saídas: CLK (A) e DT (B) e gera pulsos distintos conforme o sentido de rotação (horário/ anti-horário), como mostrado nas figuras a seguir:
 
+>> NOVO DADO A CADA BORDA DO SINAL CLK (A) 
+
 - Se DT (B) != CLK (A) então houve um pulso no sentido horário
 
 ![](https://lastminuteengineers.com/wp-content/uploads/arduino/rotary-encoder-output-pulses-in-clockwise-rotation.png)
@@ -88,9 +86,12 @@ Nós sugerimos a seguinte ligação do enconder com a placa:
 
 ![](ligacao.png)
 
+> Os defines já estão no código.
+
 Para ler os sinais do PC31 e PA19 vocês precisam configurar os pinos como entrada **SEM PULLUP**.
 
 > DICA 1: Use interrupção de borda no pino do CLK (A) na do DT não é necessário
+>
 > DICA 2: Eu sugiro ativarem debounce nos pinos com frequência de 200Hz. Exemplo:
 >
 > `pio_set_debounce_filter(DT_PIO, DT_PIO_PIN_MASK, 200);`)
@@ -108,9 +109,9 @@ E então fazer a lógica descrita anteriormente para identificar o sentido de ro
 
 #### Lendo a velocidade 
 
-Além da leitura da direção de rotação do enconder vocês terão que classificar a velocidade de rotação, a ideia aqui é que vocês terão que mudar a frequência em 0.1 Mhz se o enconder for girado de vagar e 10 Mhz se for detectado que o usuário está girando rapidamente o botão. Para que possa varrer o range de frequências de maneira prática.
+Além da leitura da direção de rotação do enconder vocês terão que classificar a velocidade de rotação, a ideia aqui é que vocês terão que mudar a frequência em 0.1 Mhz se o enconder for girado de vagar e de 5.0 em 5.0 Mhz se for detectado que o usuário está girando rapidamente o botão. Para que possa varrer o range de frequências de maneira prática.
 
-Para isso vocês terão que utilizar o RTT (como incremento ou apenas ele como relógio), calculando o dT entre os pulsos para saber se foi rápido ou devagar.
+Para isso vocês terão que utilizar o RTT (como incremento ou apenas ele como relógio), calculando o dT entre os pulsos para saber se a rotacão foi rápido ou devagar.
 
 > DICA RTOS: Envie a velocidade de rotação detectada junto com a direção na fila.
 
@@ -125,7 +126,7 @@ Especificação:
 
 Ao iniciar a aplicação todos os botões devem ter frequência associada de 77.5 Mhz, o usuário pode usando o enconder escolher uma nova frequência e se for de seu interesse armazenar a frequência associando ela a ao ID de um dos botões.
 
-Ao apertar e segurar (evento: LONG_PRESSED) um dos botões o sistema deve armazenar a frequência que estava sendo exibida nesse botão, ao apertar e soltar rapidamente um dos botões o sistema deve exibir a frequência que foi salva nele (a padrão ou a nova).
+Ao apertar e segurar um dos botões (evento: LONG_PRESSED)  o sistema deve armazenar a frequência que estava sendo exibida e associar a este botão, ao apertar e soltar rapidamente um dos botões o sistema deve exibir a frequência salva nele (a padrão ou a nova).
 
 ## Rubrica
 
@@ -135,11 +136,12 @@ A seguir rubrica da entrega.
 
 Assista ao vídeo no youtube para ver o comportamento da máquina:
 
+***********************************
 
 Requisitos funcionais:
 
 - Mudar frequência de acordo com sentido de rotação (encoder)
-- Dois modos de incremento da freq: rápido (passo de 5.0) e lento (passo de 0.1)
+- Dois modos de incremento da frequência: rápido (passo de 5.0) e lento (passo de 0.1)
 - Ao apertar o botão exibir a frequência salva no index do botão
 - Ao apertar e segurar o botão salvar a frequência atual como padrão do botão
 
@@ -151,15 +153,28 @@ Requisitos técnicos:
 - RTOS: Usar fila para comunicar callback do clk e task_update (enviando sentido e velocidade de rotação)
 - RTOS: Usar fila para comunicar handler dos botões do LVGL com a task_update (passando ID e tipo de evento)
 
-## C+ - Novas velocidades
+O que não pode:
 
-- Sistema funciona sem nenhum bug.
-- Criar novas categorias de velocidade para facilitar a navegação:
-    - Rapidão: 10 passos
-    - Mega rápido: 100 passos
+- Atualizar LCD na interrupção
+- Usar variável global na interrupção 
 
-## B - ??
+## C+ : Novas velocidades
 
-## B+ - 
+Criar novas categorias de velocidade para facilitar a navegação:
 
-## A - 
+- Rapidão: 10 passos
+- Mega rápido: 100 passos
+
+Adicionar um buzzer ao projeto toda vez que o uma nova frequência for salva faca um barulho confirmando a acão.
+
+## B : Volume
+
+Usando o potenciômetro adicione o controle de volume ao projeto, além de fazer a leitura, **você deve exibir no LCD** o volume atual de forma gráfica (não pode ser apenas número).
+
+## B+ : Relógio
+
+Usando o RTC adicione um relógio ao LCD.
+
+## A : Ajuste
+
+Permita que o usuário ajuste o relógio via o encoder, para isso crie um modo de configuracão.
