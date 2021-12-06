@@ -129,7 +129,7 @@ static void event_handler(lv_event_t * e) {
 }
 
 static const char * btnm_map[] = {"0", "1", "2", "3", "\n",
-								  "5", "6", "7", "8", "\n",
+								  "4", "5", "6", "7", "\n",
 								  "Volume", "Dial", ""};
 
 void lv_som(void) {
